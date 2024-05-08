@@ -1,4 +1,3 @@
-use std::io;
 use std::fs;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use std::path::PathBuf;
@@ -14,11 +13,12 @@ use rayon::prelude::*;
  * 
  * @return: The path to the file if it was found, otherwise an error.
  */
-pub async fn fuzzy_search(filename: &str) -> io::Result<Vec<PathBuf>> {
+#[tauri::command]
+pub async fn fuzzy_search(filename: &str) -> Result<Vec<PathBuf>, String> {
     let matcher = SkimMatcherV2::default();
     let mut file = match fs::File::open("C:/temp/cache.json") {
         Ok(file) => file,
-        Err(_) => return Err(io::Error::new(io::ErrorKind::NotFound, "Cache not found")),
+        Err(_) => return Err("Cache not found".to_string()),
     };
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
