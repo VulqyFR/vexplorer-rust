@@ -4,6 +4,7 @@ mod explorer;
 use explorer::finder::search_directory;
 use explorer::cache::create_cache;
 use explorer::explorer::open_directory;
+use explorer::explorer::open_file;
 use explorer::sys_user::get_user;
 use lazy_static::lazy_static;
 use std::sync::Arc;
@@ -29,7 +30,7 @@ pub fn load_cache() {
 #[tokio::main]
 async fn main() {
   std::thread::spawn(|| {
-    create_cache();
+    //create_cache();
   });
   std::thread::spawn(|| {
     load_cache();
@@ -39,6 +40,7 @@ async fn main() {
     search_directory,
     get_user,
     open_directory,
+    open_file,
   ])
     .run(tauri::generate_context!())
     .expect("Error while running vexplorer");
