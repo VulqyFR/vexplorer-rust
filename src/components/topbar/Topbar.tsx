@@ -4,7 +4,7 @@ import Button from "./Button";
 import Path from "./Path";
 import Searchbar from "./Searchbar";
 
-const Topbar = ({ setFiles, files, path }: TopbarProps) => {
+const Topbar = ({ setPath, setFiles, files, path }: TopbarProps) => {
   const [search, setSearch] = useState("");
   const previousPath = () => {
     console.log("Previous Path");
@@ -19,8 +19,13 @@ const Topbar = ({ setFiles, files, path }: TopbarProps) => {
         <Button onClick={previousPath}>S</Button>
         <Button onClick={previousPath}>V</Button>
       </div>
-      <Path path={path} search={search} setFiles={setFiles} />
-      <Searchbar setSearch={setSearch} setFiles={setFiles} files={files} />
+      <Path setPath={setPath} path={path} search={search} setFiles={setFiles} />
+      <Searchbar
+        path={path}
+        setSearch={setSearch}
+        setFiles={setFiles}
+        files={files}
+      />
     </div>
   );
 };

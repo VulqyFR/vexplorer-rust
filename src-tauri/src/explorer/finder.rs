@@ -1,27 +1,15 @@
 use crate::CACHE;
-use std::{fs, time::Instant};
+use std::time::Instant;
 use std::path::PathBuf;
 use std::sync::Arc;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use fuzzy_matcher::FuzzyMatcher;
 use rayon::prelude::*;
-use serde::Serialize;
-use chrono::{DateTime, Utc};
+use crate::explorer::file_metadata::FileMetadata;
+use crate::explorer::file_metadata::get_metadata;
 
 // Minimum score to consider a match
 const MINIMUM_SCORE: i16 = 60;
-
-/* 
- * This struct represents the metadata of a file.
-*/
-#[derive(Serialize, Debug)] 
-pub struct FileMetadata {
-    pub file_name: String,
-    pub file_modified: String,
-    pub file_path: String,
-    pub file_type: String,
-    pub file_size: String,
-}
 
 /* 
  * This function calculates the score of a match between the query and the element.
@@ -39,18 +27,6 @@ fn calculate_score(matcher: &SkimMatcherV2, query: &str, element: &str) -> i16 {
     matcher.fuzzy_match(element, query).unwrap_or(0) as i16
 }   
 
-/*
- * This function checks if the query contains an extension.
- * 
- * @params query: The query to check.
- * 
- * @return: True if the query contains an extension, otherwise false.
-*/
-#[allow(dead_code)]
-fn contains_extension(query: &String) -> bool {
-    query.contains(".")
-}
-
 /* 
  * This function does a fuzzy search on the given directory and his subdirectories for the given searched file.
  * 
@@ -59,10 +35,12 @@ fn contains_extension(query: &String) -> bool {
  * 
  * @return: All the paths of the files or directories that match the query.
 */
-fn fuzzy_search(path: String, query: String) -> Result<Vec<PathBuf>, String> {
-    let map = Arc::clone(&CACHE);
+fn fuzzy_search(path: String, query: String) -> Vec<PathBuf> {
+    let map = Arc::clone(&*CACHE);
+    let map = map.lock().unwrap();
+    let map = map.as_ref().unwrap();
     let matcher = SkimMatcherV2::default();
-    let results: Vec<_> = (*map).par_iter()
+    let results: Vec<_> = map.par_iter()
         .filter_map(|(key, paths)| {
             let score = calculate_score(&matcher, &query, key);
             if score > MINIMUM_SCORE {
@@ -75,47 +53,44 @@ fn fuzzy_search(path: String, query: String) -> Result<Vec<PathBuf>, String> {
         .map(PathBuf::from)
         .collect::<Vec<PathBuf>>();
     let filtered_results = results.into_par_iter().filter(|p| p.to_str().unwrap_or("").starts_with(&path)).collect();
-    Ok(filtered_results)
+    filtered_results
+}
+/*
+ * This function searches for the files and folder in the given directory.
+ * 
+ * @params path: The path to the directory to search in.
+ * @params query: The query to search for.
+ * 
+ * @return: The metadata of the files in the directory.
+ * 
+*/ 
+#[tauri::command]
+pub fn search_directory(path: String, query: String) -> Result<Vec<FileMetadata>, String> {
+    let start = Instant::now();
+    let entries = fuzzy_search(path.clone(), query.clone());
+    let result = get_metadata(entries)?;
+    println!("Search took: {:?}", start.elapsed());
+    Ok(result)
 }
 
 /*
-    * This function searches for the given query in the given directory.
-    * 
-    * @params path: The path to the directory to search in.
-    * @params query: The query to search for.
-    * 
-    * @return: An error if the query does not contain an extension, otherwise nothing.
-    
+ * This function gets the type of the file.
+ * 
+ * @params entry: The entry to get the type from.
+ * 
+ * @return: The type of the file.
+ * 
 */
-#[tauri::command]
-pub fn search_directory(path: String, query: Option<String>) -> Result<Vec<FileMetadata>, String> {
-    let start = Instant::now();
-    let mut result = Vec::new();
-    let entries: Vec<PathBuf> = match query {
-        Some(q) => {
-            fuzzy_search(path.clone(), q).expect("Fuzzy search failed")
-        },
-        None => fs::read_dir(path.clone()).unwrap().map(|res| res.unwrap().path()).collect(),
-    };
-    for entry in entries {
-        if let Ok(meta) = fs::metadata(&entry) {
-            let metadata = FileMetadata {
-                file_name: entry.file_name().unwrap().to_str().unwrap().to_string(),
-                file_type: if entry.is_file() {
-                    match entry.extension() {
-                        Some(ext) => ext.to_str().unwrap().to_string(),
-                        None => String::from("Unknown")
-                    }
-                } else {
-                    String::from("File folder")
-                },
-                file_path: entry.to_str().unwrap().to_string(),
-                file_modified: DateTime::<Utc>::from(meta.modified().unwrap()).format("%Y-%m-%d %H:%M:%S").to_string(),
-                file_size: meta.len().to_string(),
-            };
-            result.push(metadata);
+
+// TODO implement the extension filter
+#[allow(dead_code)]
+fn get_file_type(entry: &PathBuf) -> String {
+    if entry.is_file() {
+        match entry.extension() {
+            Some(ext) => ext.to_str().unwrap().to_string(),
+            None => String::from("Unknown")
         }
+    } else {
+        String::from("File folder")
     }
-    println!("Search took: {:?}", start.elapsed());
-    Ok(result)
 }

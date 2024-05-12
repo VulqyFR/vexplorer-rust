@@ -4,12 +4,12 @@ export interface FileMetadata {
   file_name: string;
   file_modified: string;
   file_path: string;
-  file_type: string;
   file_size: string;
 }
 
 export interface SearchbarProps {
   setFiles: (files: Array<FileMetadata>) => void;
+  path: string;
   files: Array<FileMetadata>;
   setSearch: (search: string) => void;
 }
@@ -23,6 +23,7 @@ export interface ElementProps {
 }
 
 export interface PathProps {
+  setPath: (path: string) => void;
   path: string;
   setFiles: (files: Array<FileMetadata>) => void;
   search: string;
@@ -30,6 +31,7 @@ export interface PathProps {
 
 export interface SidebarProps {
   setPath: (path: string) => void;
+  user: string;
 }
 
 export interface LinkProps {
@@ -38,6 +40,7 @@ export interface LinkProps {
 }
 
 export interface TopbarProps {
+  setPath: (path: string) => void;
   setFiles: (files: Array<FileMetadata>) => void;
   files: Array<FileMetadata>;
   path: string;
