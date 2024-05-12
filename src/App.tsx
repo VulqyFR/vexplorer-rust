@@ -23,7 +23,7 @@ function App() {
           <Sidebar user={user} setPath={setPath} />
         </div>
         <div className="flex-grow overflow-auto pr-2">
-          <ElementList files={files} />
+          <ElementList setFiles={setFiles} files={files} />
         </div>
       </div>
     </>

@@ -3,6 +3,7 @@ import { MouseEventHandler } from "react";
 export interface FileMetadata {
   file_name: string;
   file_modified: string;
+  file_type: string;
   file_path: string;
   file_size: string;
 }
@@ -15,10 +16,12 @@ export interface SearchbarProps {
 }
 
 export interface ElementListProps {
+  setFiles: (files: Array<FileMetadata>) => void;
   files: Array<FileMetadata>;
 }
 
 export interface ElementProps {
+  setFiles: (files: Array<FileMetadata>) => void;
   file: FileMetadata;
 }
 

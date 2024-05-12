@@ -1,6 +1,7 @@
+import { invoke } from "@tauri-apps/api/tauri";
 import { ElementProps } from "../../types";
 
-const Element = ({ file }: ElementProps) => {
+const Element = ({ file, setFiles }: ElementProps) => {
   const formatFileSize = (size: string) => {
     const bytes = parseInt(size);
     if (bytes < 1024) {
@@ -19,8 +20,26 @@ const Element = ({ file }: ElementProps) => {
         );
     }
   };
+  const handleDoubleClick = () => {
+    if (file.file_type === "file") {
+      return;
+    }
+    invoke("open_directory", {
+      path: file.file_path,
+    }).then((result) => {
+      if (
+        Array.isArray(result) &&
+        result.every((item) => typeof item === "object" && item !== null)
+      ) {
+        setFiles(result);
+      }
+    });
+  };
   return (
-    <div className="flex gap-2 border-b-[1px] border-white text-sm">
+    <div
+      onDoubleClick={handleDoubleClick}
+      className="flex gap-2 border-b-[1px] border-white text-sm"
+    >
       <div className="flex flex-col gap-2 w-full">
         <div className="flex justify-between">
           <p>{file.file_name}</p>
