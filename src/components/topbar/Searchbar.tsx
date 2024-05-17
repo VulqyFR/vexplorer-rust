@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { FileMetadata, SearchbarProps } from "../../types";
+import Search from "../icons/Search";
 
 const Searchbar = ({
   path,
@@ -25,13 +26,14 @@ const Searchbar = ({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex items-center bg-[#212121] px-2 rounded-md h-8 searchbar focus:outline-none focus:ring-1 focus:ring-[#4D4D4D]">
       <input
         onChange={(e) => setSearch(e.target.value)}
         type="text"
-        className="bg-[#212121] px-2 rounded-md h-8 searchbar focus:outline-none focus:ring-1 focus:ring-[#4D4D4D]"
         onKeyDown={handleInputChange}
+        className="bg-[#212121] text-[#FFF] w-full h-full px-2 rounded-md focus:outline-none focus:ring-0"
       />
+      <Search />
     </div>
   );
 };

@@ -2,8 +2,8 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:5173/",
-    "distDir": "/dist"
+    "devPath": "http://localhost:5173",
+    "distDir": "../dist"
   },
   "package": {
     "productName": "vexplorer",
@@ -11,7 +11,15 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "window": {
+        "close": true,
+        "minimize": true,
+        "maximize": true,
+        "startDragging": true,
+        "unminimize": true,
+        "unmaximize": true
+      }
     },
     "bundle": {
       "active": true,
@@ -28,7 +36,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.vulqy.vexplorer",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -55,10 +63,13 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 720,
         "resizable": true,
         "title": "Vexplorer",
-        "width": 800
+        "transparent": true,
+        "width": 1280,
+        "center": true,
+        "decorations": false
       }
     ]
   }

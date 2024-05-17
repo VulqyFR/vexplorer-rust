@@ -21,22 +21,22 @@ const Element = ({ file, setFiles }: ElementProps) => {
     }
   };
   const handleDoubleClick = () => {
-    if (file.file_type !== "directory") {
+    if (file.file_type !== "Directory") {
       invoke("open_file", {
         path: file.file_path,
       });
-    } else {
-      invoke("open_directory", {
-        path: file.file_path,
-      }).then((result) => {
-        if (
-          Array.isArray(result) &&
-          result.every((item) => typeof item === "object" && item !== null)
-        ) {
-          setFiles(result);
-        }
-      });
+      return;
     }
+    invoke("open_directory", {
+      path: file.file_path,
+    }).then((result) => {
+      if (
+        Array.isArray(result) &&
+        result.every((item) => typeof item === "object" && item !== null)
+      ) {
+        setFiles(result);
+      }
+    });
   };
   return (
     <div

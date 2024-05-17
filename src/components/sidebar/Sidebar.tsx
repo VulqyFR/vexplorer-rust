@@ -3,7 +3,7 @@ import Link from "./Link";
 
 const Sidebar = ({ setPath, user }: SidebarProps) => {
   return (
-    <div className="flex gap-4 py-2 mx-2 my-[-0.5rem] h-full">
+    <div className="flex gap-4 py-2 mx-2 my-[-1rem] h-full">
       <div className="flex flex-col gap-2">
         <div className="pt-2">
           <Link onClick={() => setPath("")}>Home</Link>
