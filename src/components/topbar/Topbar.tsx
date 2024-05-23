@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TopbarProps } from "../../types";
 import Filter from "../icons/Filter";
 import Next from "../icons/Next";
@@ -8,11 +8,42 @@ import Button from "./Button";
 import Path from "./Path";
 import Searchbar from "./Searchbar";
 
-const Topbar = ({ setPath, setFiles, files, path }: TopbarProps) => {
+const Topbar = ({
+  setPath,
+  setFiles,
+  files,
+  path,
+  paths,
+  setPaths,
+}: TopbarProps) => {
   const [search, setSearch] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(paths.length - 1);
+
+  useEffect(() => {
+    if (path === paths[currentIndex]) {
+      return;
+    }
+
+    setCurrentIndex(paths.length - 1);
+  }, [paths]);
+
   const previousPath = () => {
-    console.log("Previous Path");
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      setPath(paths[newIndex]);
+    }
   };
+
+  const nextPath = () => {
+    if (currentIndex >= paths.length - 1) {
+      return;
+    }
+    const newIndex = currentIndex + 1;
+    setCurrentIndex(newIndex);
+    setPath(paths[newIndex]);
+  };
+
   return (
     <div className="flex items-center gap-4 px-1 p-4 border-b-[1px] border-[#4D4D4D] bg-[rgba(27,27,27,0.95)]">
       <div className="flex">
@@ -21,7 +52,7 @@ const Topbar = ({ setPath, setFiles, files, path }: TopbarProps) => {
             <Previous />
           </Button>
         </div>
-        <Button onClick={previousPath}>
+        <Button onClick={nextPath}>
           <Next />
         </Button>
         <Button onClick={previousPath}>
@@ -31,7 +62,14 @@ const Topbar = ({ setPath, setFiles, files, path }: TopbarProps) => {
           <View />
         </Button>
       </div>
-      <Path setPath={setPath} path={path} search={search} setFiles={setFiles} />
+      <Path
+        setPath={setPath}
+        path={path}
+        search={search}
+        setFiles={setFiles}
+        setPaths={setPaths}
+        paths={paths}
+      />
       <Searchbar
         path={path}
         setSearch={setSearch}

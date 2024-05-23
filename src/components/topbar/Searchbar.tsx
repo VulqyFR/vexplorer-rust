@@ -1,12 +1,17 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { FileMetadata, SearchbarProps } from "../../types";
+import { FileMetadata } from "../../types";
 import Search from "../icons/Search";
 
 const Searchbar = ({
   path,
   setFiles,
   setSearch,
-}: SearchbarProps): JSX.Element => {
+}: {
+  path: string;
+  setFiles: (files: FileMetadata[]) => void;
+  setSearch: (search: string) => void;
+  files: FileMetadata[];
+}): JSX.Element => {
   const handleInputChange = (
     e: React.KeyboardEvent<HTMLInputElement>
   ): void => {

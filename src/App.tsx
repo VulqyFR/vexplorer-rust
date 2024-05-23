@@ -11,6 +11,7 @@ import { FileMetadata } from "./types";
 function App() {
   const [files, setFiles] = useState<Array<FileMetadata>>([]);
   const [path, setPath] = useState<string>("");
+  const [paths, setPaths] = useState<string[]>([""]);
   const [user, setUser] = useState<string>("");
   useEffect(() => {
     window.onload = async () => {
@@ -23,7 +24,14 @@ function App() {
   return (
     <>
       <TitleBar />
-      <Topbar setPath={setPath} path={path} setFiles={setFiles} files={files} />
+      <Topbar
+        setPaths={setPaths}
+        paths={paths}
+        setPath={setPath}
+        path={path}
+        setFiles={setFiles}
+        files={files}
+      />
       <div className="h-full flex pr-1 py-2">
         <div className="sticky top-0 h-screen">
           <Sidebar user={user} setPath={setPath} />

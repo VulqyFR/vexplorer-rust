@@ -9,6 +9,10 @@ import Minimize from "../icons/Minimize";
 const Titlebar = () => {
   const [isMaximized, setIsMaximized] = useState(false);
 
+  /* 
+    Function to handle the maximize button click event
+    and toggle the window between maximized and unmaximized states
+  */
   const handleMaximize = () => {
     appWindow.isMaximized().then((maximized) => {
       if (maximized) {
@@ -19,20 +23,24 @@ const Titlebar = () => {
     });
   };
 
+  /* 
+    Function to update the maximized state of the window
+    and set it to the state variable isMaximized
+  */
   const updateMaximizedState = () => {
     appWindow.isMaximized().then((maximized) => {
       setIsMaximized(maximized);
     });
   };
 
+  /* 
+    UseEffect hook to listen for the resize event
+    and update the maximized state of the window
+    cleanup remove the event listener on unmount
+  */
   useEffect(() => {
-    // Check initial window state
     updateMaximizedState();
-
-    // Listen for window maximize/unmaximize events
     const unlistenMaximize = listen("tauri://resize", updateMaximizedState);
-
-    // Cleanup event listener on component unmount
     return () => {
       unlistenMaximize.then((unlisten: any) => unlisten());
     };
@@ -59,7 +67,7 @@ const Titlebar = () => {
           <Minimize />
         </a>
         <a onClick={handleMaximize}>
-          {isMaximized ? <p>Minimize</p> : <Maximize />}
+          {isMaximized ? <Maximize /> : <p>Minimize</p>}
         </a>
         <a onClick={() => appWindow.close()}>
           <Close />

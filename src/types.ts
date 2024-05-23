@@ -28,8 +28,10 @@ export interface ElementProps {
 export interface PathProps {
   setPath: (path: string) => void;
   path: string;
+  setPaths: React.Dispatch<React.SetStateAction<string[]>>;
   setFiles: (files: Array<FileMetadata>) => void;
   search: string;
+  paths: string[];
 }
 
 export interface SidebarProps {
@@ -47,4 +49,6 @@ export interface TopbarProps {
   setFiles: (files: Array<FileMetadata>) => void;
   files: Array<FileMetadata>;
   path: string;
+  paths: string[];
+  setPaths: React.Dispatch<React.SetStateAction<string[]>>;
 }

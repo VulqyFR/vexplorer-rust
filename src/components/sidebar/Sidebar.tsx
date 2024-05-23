@@ -1,7 +1,12 @@
-import { SidebarProps } from "../../types";
 import Link from "./Link";
 
-const Sidebar = ({ setPath, user }: SidebarProps) => {
+const Sidebar = ({
+  setPath,
+  user,
+}: {
+  setPath: (currentPath: string) => void;
+  user: string;
+}) => {
   return (
     <div className="flex gap-4 py-2 mx-2 my-[-1rem] h-full">
       <div className="flex flex-col gap-2">
