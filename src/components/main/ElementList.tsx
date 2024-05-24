@@ -1,7 +1,15 @@
-import { ElementListProps } from "../../types";
+import { FileMetadata } from "../../types";
 import Element from "./Element";
 
-const ElementList = ({ files, setFiles }: ElementListProps) => {
+const ElementList = ({
+  files,
+  setFiles,
+  setPath,
+}: {
+  files: Array<FileMetadata>;
+  setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
+  setPath: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
     <table className="w-full">
       <thead className="text-left">
@@ -16,7 +24,12 @@ const ElementList = ({ files, setFiles }: ElementListProps) => {
       <tbody className="">
         <tr className="border-b-2 border-transparent h-2"></tr>
         {files.map((file, index) => (
-          <Element key={index} file={file} setFiles={setFiles} />
+          <Element
+            setPath={setPath}
+            key={index}
+            file={file}
+            setFiles={setFiles}
+          />
         ))}
       </tbody>
     </table>

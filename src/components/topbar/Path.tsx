@@ -29,12 +29,15 @@ const Path = ({
           result.every((item) => typeof item === "object" && item !== null)
         ) {
           setFiles(result);
+          setInputPath(path);
+          console.log(inputPath);
+          console.log(path);
         }
       })
       .catch((error) => {
         throw error;
       });
-  }, [path, search, setFiles]);
+  }, [path, search, setFiles, setInputPath]);
 
   useEffect(() => {
     if (path !== "" && !paths.includes(path)) {

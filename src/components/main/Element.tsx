@@ -1,7 +1,15 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { ElementProps } from "../../types";
+import { FileMetadata } from "../../types";
 
-const Element = ({ file, setFiles }: ElementProps) => {
+const Element = ({
+  file,
+  setFiles,
+  setPath,
+}: {
+  file: FileMetadata;
+  setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
+  setPath: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const formatFileSize = (size: string) => {
     let bytes = parseInt(size);
     if (isNaN(bytes)) {
@@ -35,6 +43,7 @@ const Element = ({ file, setFiles }: ElementProps) => {
         result.every((item) => typeof item === "object" && item !== null)
       ) {
         setFiles(result);
+        setPath(file.file_path);
       }
     });
   };
@@ -56,8 +65,6 @@ const Element = ({ file, setFiles }: ElementProps) => {
         return formattedType;
     }
   };
-
-  console.log("file_icon:", file.file_icon);
 
   return (
     <>
