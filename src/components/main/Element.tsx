@@ -2,13 +2,19 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { FileMetadata } from "../../types";
 
 const Element = ({
+  index,
   file,
   setFiles,
   setPath,
+  activeElement,
+  setActiveElement,
 }: {
+  index: number;
   file: FileMetadata;
   setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
   setPath: React.Dispatch<React.SetStateAction<string>>;
+  activeElement: number | null;
+  setActiveElement: React.Dispatch<React.SetStateAction<number | null>>;
 }) => {
   const formatFileSize = (size: string) => {
     let bytes = parseInt(size);
@@ -68,12 +74,20 @@ const Element = ({
 
   return (
     <>
-      <tr onDoubleClick={handleDoubleClick}>
+      <tr
+        onDoubleClick={handleDoubleClick}
+        onClick={() => {
+          setActiveElement && setActiveElement(index);
+        }}
+        className={`cursor-pointer ${
+          activeElement === index ? "bg-[#4D4D4D]" : ""
+        }`}
+      >
         <td className="file-icon">
           {file.file_icon ? (
             <img
               className="w-5 h-5"
-              src={`data:image/png;base64,${file.file_icon}`}
+              src={`data:image/png;base64,${file.file_icon} `}
               alt="File Icon"
               onError={(e) => {
                 console.error("Failed to load icon:", e);

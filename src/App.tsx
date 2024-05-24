@@ -13,6 +13,7 @@ function App() {
   const [path, setPath] = useState<string>("");
   const [paths, setPaths] = useState<string[]>([""]);
   const [user, setUser] = useState<string>("");
+  const [activeElement, setActiveElement] = useState<number | null>(null);
   useEffect(() => {
     window.onload = async () => {
       await appWindow.setDecorations(true);
@@ -34,10 +35,20 @@ function App() {
       />
       <div className="h-full flex pr-1 py-2">
         <div className="sticky top-0 h-screen">
-          <Sidebar user={user} setPath={setPath} />
+          <Sidebar
+            user={user}
+            setPath={setPath}
+            setActiveElement={setActiveElement}
+          />
         </div>
         <div className="flex-grow overflow-y-auto pr-2 mb-28 pl-4">
-          <ElementList setPath={setPath} setFiles={setFiles} files={files} />
+          <ElementList
+            setPath={setPath}
+            setFiles={setFiles}
+            files={files}
+            activeElement={activeElement}
+            setActiveElement={setActiveElement}
+          />
         </div>
       </div>
     </>
