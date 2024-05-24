@@ -17,51 +17,49 @@ const Path = ({
   }, [path]);
 
   useEffect(() => {
-    if (path === "") {
-      setFiles([]);
-    }
-    invoke<Array<FileMetadata>>("open_directory", {
-      path: path,
-    })
-      .then((result) => {
-        if (
-          Array.isArray(result) &&
-          result.every((item) => typeof item === "object" && item !== null)
-        ) {
-          setFiles(result);
-          setInputPath(path);
-          console.log(inputPath);
-          console.log(path);
+    const fetchData = async () => {
+      try {
+        if (path === "") {
+          setFiles([]);
+        } else {
+          const result = await invoke<Array<FileMetadata>>("open_directory", {
+            path,
+          });
+          if (
+            Array.isArray(result) &&
+            result.every((item) => typeof item === "object" && item !== null)
+          ) {
+            setFiles(result);
+            setInputPath(path);
+            console.log(inputPath);
+            console.log(path);
+          }
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         throw error;
-      });
-  }, [path, search, setFiles, setInputPath]);
+      }
+    };
 
-  useEffect(() => {
+    fetchData();
+
     if (path !== "" && !paths.includes(path)) {
       setPaths((prevPaths) => [...prevPaths, path]);
     }
-  }, [path, paths, setPaths]);
+  }, [path, search, setFiles, setInputPath, setPaths, paths]);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       setPath(inputPath);
     }
   };
 
   return (
-    <>
-      <input
-        value={inputPath}
-        onChange={(e) => {
-          setInputPath(e.target.value);
-        }}
-        onKeyDown={handleKeyDown}
-        className="w-full h-8 flex justify-start items-center rounded-md px-2 bg-[#212121]"
-      />
-    </>
+    <input
+      value={inputPath}
+      onChange={(e) => setInputPath(e.target.value)}
+      onKeyDown={handleKeyDown}
+      className="w-full h-8 flex justify-start items-center rounded-md px-2 bg-[#212121]"
+    />
   );
 };
 
