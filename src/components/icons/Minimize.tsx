@@ -6,7 +6,7 @@ const Minimize = () => {
       width="12px"
       height="12px"
       viewBox="0 0 52 52"
-      enable-background="new 0 0 52 52"
+      enableBackground="new 0 0 52 52"
       xmlSpace="preserve"
     >
       <g>

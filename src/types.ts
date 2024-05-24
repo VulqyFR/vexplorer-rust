@@ -6,6 +6,7 @@ export interface FileMetadata {
   file_type: string;
   file_path: string;
   file_size: string;
+  file_icon: string | null;
 }
 
 export interface SearchbarProps {

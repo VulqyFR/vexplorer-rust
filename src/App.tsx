@@ -36,7 +36,7 @@ function App() {
         <div className="sticky top-0 h-screen">
           <Sidebar user={user} setPath={setPath} />
         </div>
-        <div className="flex-grow overflow-y-auto pr-2 mb-28">
+        <div className="flex-grow overflow-y-auto pr-2 mb-28 pl-4">
           <ElementList setFiles={setFiles} files={files} />
         </div>
       </div>

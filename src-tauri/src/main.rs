@@ -33,7 +33,7 @@ async fn main() {
     //create_cache();
   });
   std::thread::spawn(|| {
-    load_cache();
+    _ = load_cache();
   });
   tauri::Builder::default()
   .invoke_handler(tauri::generate_handler![

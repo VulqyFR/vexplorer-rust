@@ -3,23 +3,23 @@ import { ElementProps } from "../../types";
 
 const Element = ({ file, setFiles }: ElementProps) => {
   const formatFileSize = (size: string) => {
-    const bytes = parseInt(size);
-    if (bytes < 1024) {
+    let bytes = parseInt(size);
+    if (isNaN(bytes)) {
+      return "";
+    }
+    if (bytes === 0) {
+      return "";
+    } else if (bytes < 1024) {
       return "1 KB";
     }
-    switch (bytes) {
-      case 0:
-        return "";
-      default:
-        const k = 1024;
-        const dm = 2;
-        const sizes = ["KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return (
-          parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
-        );
-    }
+    const k = 1024;
+    const dm = 2;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    bytes = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+    return bytes + " " + sizes[i];
   };
+
   const handleDoubleClick = () => {
     if (file.file_type !== "Directory") {
       invoke("open_file", {
@@ -38,22 +38,59 @@ const Element = ({ file, setFiles }: ElementProps) => {
       }
     });
   };
+
+  const formatFileType = (type: string) => {
+    if (type === null) {
+      return "Unknown";
+    }
+
+    let formattedType =
+      type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+
+    switch (formattedType) {
+      case "Directory":
+        return "File folder";
+      case "Lnk":
+        return "Shortcut";
+      default:
+        return formattedType;
+    }
+  };
+
+  console.log("file_icon:", file.file_icon);
+
   return (
-    <div
-      onDoubleClick={handleDoubleClick}
-      className="flex gap-2 border-b-[1px] border-white text-sm"
-    >
-      <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between">
-          <p>{file.file_name}</p>
-          <p>{file.file_modified}</p>
-        </div>
-        <div className="flex w-full justify-between">
-          <p>{file.file_path}</p>
-          <p>{formatFileSize(file.file_size)}</p>
-        </div>
-      </div>
-    </div>
+    <>
+      <tr onDoubleClick={handleDoubleClick}>
+        <td className="file-icon">
+          {file.file_icon ? (
+            <img
+              className="w-5 h-5"
+              src={`data:image/png;base64,${file.file_icon}`}
+              alt="File Icon"
+              onError={(e) => {
+                console.error("Failed to load icon:", e);
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          ) : (
+            <span>No Icon</span>
+          )}
+        </td>
+        <td className="text-ellipsis overflow-hidden text-sm">
+          {file.file_name}
+        </td>
+        <td className="text-ellipsis overflow-hidden text-sm">
+          {file.file_modified}
+        </td>
+        <td className="text-ellipsis overflow-hidden text-sm">
+          {formatFileType(file.file_type)}
+        </td>
+        <td className="text-ellipsis overflow-hidden text-sm">
+          {formatFileSize(file.file_size)}
+        </td>
+      </tr>
+    </>
   );
 };
 

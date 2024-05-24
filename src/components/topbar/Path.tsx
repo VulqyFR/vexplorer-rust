@@ -13,6 +13,10 @@ const Path = ({
   const [inputPath, setInputPath] = useState(path);
 
   useEffect(() => {
+    setInputPath(path);
+  }, [path]);
+
+  useEffect(() => {
     if (path === "") {
       setFiles([]);
     }
@@ -47,7 +51,7 @@ const Path = ({
   return (
     <>
       <input
-        value={path}
+        value={inputPath}
         onChange={(e) => {
           setInputPath(e.target.value);
         }}
