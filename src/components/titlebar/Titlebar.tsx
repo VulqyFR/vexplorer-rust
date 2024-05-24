@@ -5,6 +5,7 @@ import Add from "../icons/Add";
 import Close from "../icons/Close";
 import Maximize from "../icons/Maximize";
 import Minimize from "../icons/Minimize";
+import Restore from "../icons/Restore";
 
 const Titlebar = () => {
   const [isMaximized, setIsMaximized] = useState(false);
@@ -67,9 +68,9 @@ const Titlebar = () => {
           <Minimize />
         </a>
         <a onClick={handleMaximize}>
-          {isMaximized ? <Maximize /> : <p>Minimize</p>}
+          {isMaximized ? <Restore /> : <Maximize />}
         </a>
-        <a onClick={() => appWindow.close()}>
+        <a className="ml-[-0.25rem]" onClick={() => appWindow.close()}>
           <Close />
         </a>
       </div>
