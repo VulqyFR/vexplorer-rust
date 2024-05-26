@@ -4,8 +4,8 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use fuzzy_matcher::FuzzyMatcher;
-use rayon::prelude::*;
 use crate::explorer::file_metadata::FileMetadata;
+use rayon::prelude::*;
 use crate::explorer::file_metadata::get_metadata;
 
 // Minimum score to consider a match

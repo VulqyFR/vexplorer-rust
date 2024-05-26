@@ -1,16 +1,22 @@
+import { Volume } from "../../types";
 import Link from "./Link";
 
 const Sidebar = ({
   setPath,
   setActiveElement,
   user,
+  volumes,
 }: {
   setPath: (currentPath: string) => void;
   setActiveElement: (index: number | null) => void;
   user: string;
+  volumes: Array<Volume>;
 }) => {
+  const formatVolumeName = (volumeName: string) => {
+    return volumeName.slice(0, volumeName.length - 1).toUpperCase();
+  };
   return (
-    <div className="flex gap-4 py-2 mx-2 my-[-1rem] h-full">
+    <div className="flex gap-2 py-2 ml-1 my-[-1rem] h-full">
       <div className="flex flex-col gap-2">
         <div className="pt-2">
           <Link
@@ -73,14 +79,25 @@ const Sidebar = ({
           </Link>
         </div>
         <div>
-          <Link
-            onClick={() => {
-              setPath("C:\\");
-              setActiveElement(null);
-            }}
-          >
-            This PC
-          </Link>
+          <ul>
+            <li className="text-xs px-6 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]">
+              This PC
+            </li>
+            {volumes.map((volume, index) => (
+              <li key={index}>
+                <p
+                  className="text-xs pl-8 pr-4 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]"
+                  onClick={() => {
+                    setPath(volume.mount_point);
+                    setActiveElement(null);
+                  }}
+                >
+                  {volume.name} &#40;
+                  {formatVolumeName(volume.mount_point)}&#41;
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <div className="border-r-[1px] border-[#4D4D4D]"></div>

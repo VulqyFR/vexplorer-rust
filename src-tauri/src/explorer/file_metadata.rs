@@ -8,7 +8,7 @@ use winapi::um::shellapi::SHGetFileInfoW;
 use winapi::um::shellapi::SHFILEINFOW;
 use winapi::um::shellapi::SHGFI_ICON;
 use winapi::um::winuser::DestroyIcon;
-use crate::explorer::icon_converter::icon_to_base64;
+use crate::helper::icon_converter::icon_to_base64;
 
 
 #[derive(Debug, Serialize, Deserialize)]

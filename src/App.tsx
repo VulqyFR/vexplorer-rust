@@ -6,7 +6,7 @@ import ElementList from "./components/main/ElementList";
 import Sidebar from "./components/sidebar/Sidebar";
 import TitleBar from "./components/titlebar/Titlebar";
 import Topbar from "./components/topbar/Topbar";
-import { FileMetadata } from "./types";
+import { FileMetadata, Volume } from "./types";
 
 function App() {
   const [files, setFiles] = useState<Array<FileMetadata>>([]);
@@ -14,12 +14,17 @@ function App() {
   const [paths, setPaths] = useState<string[]>([""]);
   const [user, setUser] = useState<string>("");
   const [activeElement, setActiveElement] = useState<number | null>(null);
+  const [volumes, setVolumes] = useState<Array<Volume>>([]);
   useEffect(() => {
     window.onload = async () => {
       await appWindow.setDecorations(true);
     };
     invoke("get_user").then((user) => {
       setUser(user as string);
+    });
+    invoke("get_volumes").then((volumes) => {
+      setVolumes(volumes as Array<Volume>);
+      console.log(volumes);
     });
   }, []);
   return (
@@ -39,6 +44,7 @@ function App() {
             user={user}
             setPath={setPath}
             setActiveElement={setActiveElement}
+            volumes={volumes}
           />
         </div>
         <div className="flex-grow overflow-y-auto pr-2 mb-28 pl-4">

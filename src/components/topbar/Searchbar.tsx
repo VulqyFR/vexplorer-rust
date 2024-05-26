@@ -31,12 +31,12 @@ const Searchbar = ({
   };
 
   return (
-    <div className="flex items-center bg-[#212121] px-2 rounded-md h-8 searchbar focus:outline-none focus:ring-1 focus:ring-[#4D4D4D]">
+    <div className="group flex items-center bg-[#212121] px-2 rounded-md h-8 searchbar focus-within:ring-1 focus-within:ring-[#CCC]">
       <input
         onChange={(e) => setSearch(e.target.value)}
         type="text"
         onKeyDown={handleInputChange}
-        className="bg-[#212121] text-[#FFF] w-full h-full px-2 rounded-md focus:outline-none focus:ring-0"
+        className="bg-[#212121] text-[#FFF] w-full h-full px-2 rounded-md focus:outline-none"
       />
       <Search />
     </div>

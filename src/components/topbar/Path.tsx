@@ -54,12 +54,14 @@ const Path = ({
   };
 
   return (
-    <input
-      value={inputPath}
-      onChange={(e) => setInputPath(e.target.value)}
-      onKeyDown={handleKeyDown}
-      className="w-full h-8 flex justify-start items-center rounded-md px-2 bg-[#212121]"
-    />
+    <div className="group flex items-center bg-[#212121] px-2 rounded-md h-8 searchbar focus-within:ring-1 focus-within:ring-[#CCC] w-full">
+      <input
+        value={inputPath}
+        onChange={(e) => setInputPath(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="w-full h-8 flex justify-start items-center rounded-md px-2 bg-[#212121] focus:outline-none"
+      />
+    </div>
   );
 };
 

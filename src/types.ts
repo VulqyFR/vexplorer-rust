@@ -9,6 +9,14 @@ export interface FileMetadata {
   file_icon: string | null;
 }
 
+export interface Volume {
+  name: string;
+  mount_point: string;
+  available_space: number;
+  total_space: number;
+  used_space: number;
+}
+
 export interface SearchbarProps {
   setFiles: (files: Array<FileMetadata>) => void;
   path: string;

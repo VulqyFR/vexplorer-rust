@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod explorer;
+mod helper;
+
 use explorer::finder::search_directory;
 use explorer::cache::create_cache;
 use explorer::explorer::open_directory;
@@ -12,11 +14,11 @@ use std::collections::HashMap;
 use std::fs;
 use std::io::Read;
 use std::sync::Mutex;
+use explorer::volumes::get_volumes;
 
 lazy_static! {
   static ref CACHE: Arc<Mutex<Option<HashMap<String, Vec<String>>>>> = Arc::new(Mutex::new(None));
 }
-
 pub fn load_cache() {
   let start = std::time::Instant::now();
   let mut file = fs::File::open("C:/temp/cache.json").unwrap();
@@ -41,6 +43,7 @@ async fn main() {
     get_user,
     open_directory,
     open_file,
+    get_volumes,
   ])
     .run(tauri::generate_context!())
     .expect("Error while running vexplorer");
