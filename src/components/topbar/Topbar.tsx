@@ -44,21 +44,29 @@ const Topbar = ({
     setPath(paths[newIndex]);
   };
 
+  const handleFilter = () => {
+    //TODO implement filter
+  };
+
+  const handleView = () => {
+    //TODO implement view
+  };
+
   return (
     <div className="flex items-center gap-4 px-1 p-4 border-b-[1px] border-[#4D4D4D] bg-[rgba(27,27,27,0.95)]">
       <div className="flex">
         <div className="ml-4">
-          <Button onClick={previousPath}>
+          <Button onClick={previousPath} disabled={currentIndex <= 0}>
             <Previous />
           </Button>
         </div>
-        <Button onClick={nextPath}>
+        <Button onClick={nextPath} disabled={currentIndex >= paths.length - 1}>
           <Next />
         </Button>
-        <Button onClick={previousPath}>
+        <Button onClick={handleFilter}>
           <Filter />
         </Button>
-        <Button onClick={previousPath}>
+        <Button onClick={handleView}>
           <View />
         </Button>
       </div>
