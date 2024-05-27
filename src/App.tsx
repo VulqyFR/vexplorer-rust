@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { appWindow } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import "./App.css";
-import ElementList from "./components/main/ElementList";
+import ElementList from "./components/elements/ElementList";
 import Sidebar from "./components/sidebar/Sidebar";
 import TitleBar from "./components/titlebar/Titlebar";
 import Topbar from "./components/topbar/Topbar";
