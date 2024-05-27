@@ -13,6 +13,7 @@ use explorer::file_operations::copy_file;
 use explorer::file_operations::delete_file;
 use explorer::file_operations::create_file;
 use explorer::file_operations::create_dir;
+use explorer::file_operations::delete_dir;
 use explorer::volumes::get_volumes;
 use lazy_static::lazy_static;
 use std::sync::Arc;
@@ -53,7 +54,8 @@ async fn main() {
     copy_file,
     delete_file,
     create_file,
-    create_dir
+    create_dir,
+    delete_dir
   ])
     .run(tauri::generate_context!())
     .expect("Error while running vexplorer");

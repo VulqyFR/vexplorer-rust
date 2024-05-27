@@ -23,8 +23,19 @@ pub fn copy_file(path: String, new_path: String) -> Result<(), String> {
 
 #[tauri::command]
 pub fn delete_file(path: String) -> Result<(), String> {
+    print!("Deleting file: {}", path);
     let path = Path::new(&path);
     match fs::remove_file(path) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn delete_dir(path: String) -> Result<(), String> {
+    print!("Deleting directory: {}", path);
+    let path = Path::new(&path);
+    match fs::remove_dir_all(path) {
         Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }

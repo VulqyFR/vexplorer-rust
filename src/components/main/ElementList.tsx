@@ -22,7 +22,8 @@ const ElementList = ({
     x: number;
     y: number;
     elementId: number | null;
-  }>({ visible: false, x: 0, y: 0, elementId: null });
+    selectedFile: FileMetadata | null;
+  }>({ visible: false, x: 0, y: 0, elementId: null, selectedFile: null });
 
   return (
     <div ref={parentRef} className="relative">
@@ -30,7 +31,10 @@ const ElementList = ({
         <ContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
+          selectedFile={contextMenu.selectedFile}
           setContextMenu={setContextMenu}
+          setFiles={setFiles}
+          setPath={setPath}
         />
       )}
       <table className="w-full">
@@ -65,6 +69,7 @@ const ElementList = ({
                     x: e.pageX,
                     y: e.pageY,
                     elementId: index,
+                    selectedFile: file,
                   });
                 }
               }}

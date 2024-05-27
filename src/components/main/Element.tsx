@@ -25,6 +25,7 @@ const Element = ({
       x: number;
       y: number;
       elementId: number | null;
+      selectedFile: FileMetadata | null;
     }>
   >;
   parentRef: React.RefObject<HTMLDivElement>;
@@ -33,6 +34,7 @@ const Element = ({
     x: number;
     y: number;
     elementId: number | null;
+    selectedFile: FileMetadata | null;
   };
 }) => {
   useEffect(() => {
@@ -120,6 +122,7 @@ const Element = ({
               x: e.pageX - parentBounds.left,
               y: e.pageY - parentBounds.top,
               elementId: index,
+              selectedFile: file,
             });
           }
         }}
