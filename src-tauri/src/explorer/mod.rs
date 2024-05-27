@@ -4,3 +4,4 @@ pub mod sys_user;
 pub mod explorer;
 pub mod file_metadata;
 pub mod volumes;
+pub mod file_operations;

@@ -8,13 +8,18 @@ use explorer::cache::create_cache;
 use explorer::explorer::open_directory;
 use explorer::explorer::open_file;
 use explorer::sys_user::get_user;
+use explorer::file_operations::rename_file;
+use explorer::file_operations::copy_file;
+use explorer::file_operations::delete_file;
+use explorer::file_operations::create_file;
+use explorer::file_operations::create_dir;
+use explorer::volumes::get_volumes;
 use lazy_static::lazy_static;
 use std::sync::Arc;
 use std::collections::HashMap;
 use std::fs;
 use std::io::Read;
 use std::sync::Mutex;
-use explorer::volumes::get_volumes;
 
 lazy_static! {
   static ref CACHE: Arc<Mutex<Option<HashMap<String, Vec<String>>>>> = Arc::new(Mutex::new(None));
@@ -44,6 +49,11 @@ async fn main() {
     open_directory,
     open_file,
     get_volumes,
+    rename_file,
+    copy_file,
+    delete_file,
+    create_file,
+    create_dir
   ])
     .run(tauri::generate_context!())
     .expect("Error while running vexplorer");

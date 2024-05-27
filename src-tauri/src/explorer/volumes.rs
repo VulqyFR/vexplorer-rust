@@ -1,7 +1,6 @@
-use std::io::Error;
 use std::path::PathBuf;
 use serde::Serialize;
-use sysinfo::{Disk, Disks, System};
+use sysinfo::{Disk, Disks,};
 
 #[derive(Serialize, Debug)]
 pub struct Volume {

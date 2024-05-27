@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import { useEffect } from "react";
 import { FileMetadata } from "../../types";
 
 const Element = ({
@@ -8,6 +9,8 @@ const Element = ({
   setPath,
   activeElement,
   setActiveElement,
+  setContextMenu,
+  parentRef,
 }: {
   index: number;
   file: FileMetadata;
@@ -15,7 +18,36 @@ const Element = ({
   setPath: React.Dispatch<React.SetStateAction<string>>;
   activeElement: number | null;
   setActiveElement: React.Dispatch<React.SetStateAction<number | null>>;
+  onContextMenu: (e: React.MouseEvent) => void;
+  setContextMenu: React.Dispatch<
+    React.SetStateAction<{
+      visible: boolean;
+      x: number;
+      y: number;
+      elementId: number | null;
+    }>
+  >;
+  parentRef: React.RefObject<HTMLDivElement>;
+  contextMenu: {
+    visible: boolean;
+    x: number;
+    y: number;
+    elementId: number | null;
+  };
 }) => {
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (e.button === 0) {
+        setContextMenu((prevState) => ({ ...prevState, visible: false }));
+      }
+    };
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
+
   const formatFileSize = (size: string) => {
     let bytes = parseInt(size);
     if (isNaN(bytes)) {
@@ -79,6 +111,18 @@ const Element = ({
         onClick={() => {
           setActiveElement && setActiveElement(index);
         }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          const parentBounds = parentRef.current?.getBoundingClientRect();
+          if (parentBounds) {
+            setContextMenu({
+              visible: true,
+              x: e.pageX - parentBounds.left,
+              y: e.pageY - parentBounds.top,
+              elementId: index,
+            });
+          }
+        }}
         className={`cursor-pointer ${
           activeElement === index ? "bg-[#4D4D4D]" : ""
         }`}
@@ -95,7 +139,7 @@ const Element = ({
               }}
             />
           ) : (
-            <span>No Icon</span>
+            <span>.</span>
           )}
         </td>
         <td className="text-ellipsis overflow-hidden text-sm">
