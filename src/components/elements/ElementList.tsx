@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { FileMetadata } from "../../types";
-import ContextMenu from "./ContextMenu";
+import ContextMenu from "./ElementContextMenu";
 import Element from "./Element";
 
 const ElementList = ({
