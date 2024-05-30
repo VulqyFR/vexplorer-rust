@@ -50,6 +50,7 @@ function App() {
         <div className="flex-grow overflow-y-auto pr-2 mb-28 pl-4">
           <ElementList
             setPath={setPath}
+            path={path}
             setFiles={setFiles}
             files={files}
             activeElement={activeElement}

@@ -1,5 +1,8 @@
 use std::fs;
 use std::path::Path;
+use std::process::Command;
+use clipboard::ClipboardProvider;
+use clipboard::ClipboardContext;
 
 #[tauri::command]
 pub fn rename_file(path: String, new_name: String) -> Result<(), String> {
@@ -12,13 +15,27 @@ pub fn rename_file(path: String, new_name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn copy_file(path: String, new_path: String) -> Result<(), String> {
-    let path = Path::new(&path);
-    let new_path = Path::new(&new_path);
-    match fs::copy(path, new_path) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e.to_string()),
-    }
+pub fn copy_file(path: String) -> Result<(), String> {
+    println!("Copied to clipboard: {}", path.clone());
+    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    ctx.set_contents(path.to_string()).unwrap();
+    Ok(())
+}
+
+#[tauri::command]
+pub fn paste_file(destination_path: String) -> Result<u64, String> {
+    println!("Pasting from clipboard to: {}", destination_path.clone());
+    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    let source_path = ctx.get_contents().unwrap();
+    println!("Source path: {}", source_path);
+    let destination_path = Path::new(&destination_path);
+    println!("Destination path: {}", destination_path.display());
+    let output = Command::new("cmd")
+        .args(&["/C", "copy", &source_path, destination_path.to_str().unwrap()])
+        .output()
+        .expect("Failed to execute command");
+    println!("Command output: {:?}", output);
+    Ok(output.stdout.len() as u64)
 }
 
 #[tauri::command]

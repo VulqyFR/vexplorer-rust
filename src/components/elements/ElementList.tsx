@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { invoke } from "@tauri-apps/api/tauri";
+import { useEffect, useRef, useState } from "react";
 import { FileMetadata } from "../../types";
-import ContextMenu from "./ElementContextMenu";
 import Element from "./Element";
+import ContextMenu from "./ElementContextMenu";
 
 const ElementList = ({
   files,
@@ -9,8 +10,10 @@ const ElementList = ({
   setPath,
   activeElement,
   setActiveElement,
+  path,
 }: {
   files: Array<FileMetadata>;
+  path: string;
   setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
   setPath: React.Dispatch<React.SetStateAction<string>>;
   activeElement: number | null;
@@ -24,7 +27,48 @@ const ElementList = ({
     elementId: number | null;
     selectedFile: FileMetadata | null;
   }>({ visible: false, x: 0, y: 0, elementId: null, selectedFile: null });
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "c":
+          if (activeElement !== null) {
+            let c_path = files[activeElement].file_path;
+            if (e.ctrlKey) {
+              invoke("copy_file", { path: c_path });
+            }
+          }
+          break;
+        case "v":
+          if (e.ctrlKey) {
+            try {
+              invoke("paste_file", { destinationPath: path }).then(() => {
+                invoke("open_directory", { path: path }).then((result) => {
+                  if (
+                    Array.isArray(result) &&
+                    result.every(
+                      (item) => typeof item === "object" && item !== null
+                    )
+                  ) {
+                    setFiles(result);
+                  }
+                });
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    };
 
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [activeElement, files]);
   return (
     <div ref={parentRef} className="relative">
       {contextMenu.visible && (

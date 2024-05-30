@@ -9,6 +9,7 @@ use explorer::explorer::open_directory;
 use explorer::explorer::open_file;
 use explorer::sys_user::get_user;
 use explorer::file_operations::rename_file;
+use explorer::file_operations::paste_file;
 use explorer::file_operations::copy_file;
 use explorer::file_operations::delete_file;
 use explorer::file_operations::create_file;
@@ -48,6 +49,7 @@ async fn main() {
     search_directory,
     get_user,
     open_directory,
+    paste_file,
     open_file,
     get_volumes,
     rename_file,
