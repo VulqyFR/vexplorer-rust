@@ -6,6 +6,15 @@ use winapi::um::wingdi::{GetDIBits, BITMAPINFOHEADER, BITMAPINFO, DIB_RGB_COLORS
 use winapi::um::winuser::GetIconInfo;
 use winapi::shared::windef::HICON;
 use std::ptr::null_mut;
+use rayon::prelude::*;
+use std::collections::HashMap;
+use std::sync::Mutex;
+use lazy_static::lazy_static;
+use std::sync::Arc;
+
+lazy_static! {
+    pub static ref ICON_MAP: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
+}
 
 pub fn icon_to_base64(icon: HICON) -> Option<String> {
     unsafe {
@@ -41,9 +50,9 @@ pub fn icon_to_base64(icon: HICON) -> Option<String> {
             return None;
         }
 
-        for chunk in pixels.chunks_exact_mut(4) {
-            chunk.swap(0, 2); 
-        }
+        pixels.par_chunks_exact_mut(4).for_each(|chunk| {
+            chunk.swap(0, 2);
+        });
 
         let img = ImageBuffer::<Rgba<u8>, _>::from_raw(32, 32, pixels).unwrap();
         let mut buf = Vec::new();

@@ -9,7 +9,9 @@ use winapi::um::shellapi::SHFILEINFOW;
 use winapi::um::shellapi::SHGFI_ICON;
 use winapi::um::winuser::DestroyIcon;
 use crate::helper::icon_converter::icon_to_base64;
-
+use std::sync::Arc;
+use std::thread;
+use crate::helper::icon_converter::ICON_MAP;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileMetadata {
@@ -57,10 +59,11 @@ pub fn get_metadata(entries: Vec<PathBuf>) -> Result<Vec<FileMetadata>, String> 
     for entry in entries {
         if let Ok(meta) = fs::metadata(&entry) {
             let file_type = get_file_type(entry.clone()).unwrap_or("Unknown".to_string());
-            let file_icon = get_file_icon(&entry);
+            let file_path = entry.clone();
+            let file_icon = get_file_icon(&file_type, &file_path);
             let metadata = FileMetadata {
                 file_name: entry.file_name().unwrap().to_str().unwrap().to_string(),
-                file_path: entry.to_str().unwrap().to_string(),
+                file_path: file_path.to_str().unwrap().to_string(),
                 file_type,
                 file_modified: DateTime::<Utc>::from(meta.modified().unwrap()).format("%Y-%m-%d %H:%M:%S").to_string(),
                 file_size: meta.len().to_string(),
@@ -72,27 +75,38 @@ pub fn get_metadata(entries: Vec<PathBuf>) -> Result<Vec<FileMetadata>, String> 
     Ok(result)
 }
 
+pub fn get_file_icon(extension: &String, path: &PathBuf) -> Option<String> {
+    let icon_map = Arc::clone(&ICON_MAP);
+    let extension = extension.clone();
+    let path = path.clone();
 
-pub fn get_file_icon(entry: &PathBuf) -> Option<String> {
-    let mut sh_file_info: SHFILEINFOW = unsafe { std::mem::zeroed() };
-    let file_path: Vec<u16> = OsString::from(entry.as_os_str()).encode_wide().chain(Some(0)).collect();
-
-    unsafe {
-        let result = SHGetFileInfoW(
-            file_path.as_ptr(),
-            0,
-            &mut sh_file_info,
-            std::mem::size_of::<SHFILEINFOW>() as u32,
-            SHGFI_ICON,
-        );
-        if result != 0 {
-            let icon = sh_file_info.hIcon;
-            let base64_icon = icon_to_base64(icon);
-            DestroyIcon(icon);
-            base64_icon
-        } else {
-            None
+    thread::spawn(move || {
+        let mut icon_map = icon_map.lock().unwrap();
+        if let Some(icon) = icon_map.get(&extension) {
+            return Some(icon.clone());
         }
-    }
-}
 
+        let mut sh_file_info: SHFILEINFOW = unsafe { std::mem::zeroed() };
+        let file_path: Vec<u16> = OsString::from(&path.as_os_str()).encode_wide().chain(Some(0)).collect();
+
+        unsafe {
+            let result = SHGetFileInfoW(
+                file_path.as_ptr(),
+                0,
+                &mut sh_file_info,
+                std::mem::size_of::<SHFILEINFOW>() as u32,
+                SHGFI_ICON,
+            );
+            if result != 0 {
+                let icon = sh_file_info.hIcon;
+                let base64_icon = icon_to_base64(icon);
+                let cloned_icon = base64_icon.clone();
+                icon_map.insert(extension, cloned_icon.unwrap());
+                DestroyIcon(icon);
+                base64_icon
+            } else {
+                None
+            }
+        }
+    }).join().unwrap()
+}

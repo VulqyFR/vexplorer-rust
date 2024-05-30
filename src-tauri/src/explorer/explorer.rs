@@ -16,13 +16,17 @@ pub async fn open_directory(path: PathBuf) -> Result<Vec<FileMetadata>, String> 
             let entry = entry.unwrap();
             let path = entry.path();
             let meta = metadata(&path).unwrap();
+            let file_type = get_file_type(path.clone()).unwrap_or("Unknown".to_string());
+            let file_path = path.clone();
+            let file_icon = get_file_icon(&file_type, &file_path);
             FileMetadata {
                 file_name: path.file_name().unwrap().to_str().unwrap().to_string(),
-                file_path: path.to_str().unwrap().to_string(),
-                file_type: get_file_type(path.clone()).unwrap_or_else(|| "Unknown".to_string()),
+                file_path: file_path.to_str().unwrap().to_string(),
+                file_type: file_type,
                 file_modified: DateTime::<Utc>::from(meta.modified().unwrap()).format("%Y-%m-%d %H:%M:%S").to_string(),
                 file_size: meta.len().to_string(),
-                file_icon: get_file_icon(&path),
+                file_icon: file_icon,
+                //file_icon: get_file_icon(&path),
             }
         })
         .collect())
