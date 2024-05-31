@@ -27,6 +27,8 @@ const ElementList = ({
     elementId: number | null;
     selectedFile: FileMetadata | null;
   }>({ visible: false, x: 0, y: 0, elementId: null, selectedFile: null });
+
+  /* Event listener for keyboard shortcuts */
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
@@ -65,6 +67,7 @@ const ElementList = ({
 
     window.addEventListener("keydown", onKeyDown);
 
+    // Remove event listener on cleanup
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };

@@ -37,6 +37,9 @@ const Element = ({
     selectedFile: FileMetadata | null;
   };
 }) => {
+  /*
+   * Event listener for mouse click
+   */
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (e.button === 0) {
@@ -50,6 +53,9 @@ const Element = ({
     };
   }, []);
 
+  /*
+   * Format file size
+   */
   const formatFileSize = (size: string) => {
     let bytes = parseInt(size);
     if (isNaN(bytes)) {
@@ -68,6 +74,9 @@ const Element = ({
     return bytes + " " + sizes[i];
   };
 
+  /*
+   * Event handler for double click
+   */
   const handleDoubleClick = () => {
     if (file.file_type !== "Directory") {
       invoke("open_file", {
@@ -88,6 +97,9 @@ const Element = ({
     });
   };
 
+  /*
+   * Format file type
+   */
   const formatFileType = (type: string) => {
     if (type === null) {
       return "Unknown";

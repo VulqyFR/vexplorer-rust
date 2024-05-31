@@ -26,6 +26,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   setPath,
   setFiles,
 }) => {
+  /*
+   * Event handlers for context menu options
+   */
   const handleOpen = () => {
     if (selectedFile) {
       if (selectedFile.file_type !== "Directory") {
