@@ -27,6 +27,10 @@ const ElementList = ({
     elementId: number | null;
     selectedFile: FileMetadata | null;
   }>({ visible: false, x: 0, y: 0, elementId: null, selectedFile: null });
+  const [rename, setRenameFile] = useState<{
+    inputValue: string;
+    renaming: boolean;
+  }>({ inputValue: "", renaming: false });
 
   /* Event listener for keyboard shortcuts */
   useEffect(() => {
@@ -80,6 +84,7 @@ const ElementList = ({
           y={contextMenu.y}
           selectedFile={contextMenu.selectedFile}
           setContextMenu={setContextMenu}
+          setRenameFile={setRenameFile}
           setFiles={setFiles}
           setPath={setPath}
         />
@@ -99,15 +104,18 @@ const ElementList = ({
           {files.map((file, index) => (
             <Element
               index={index}
+              path={path}
               parentRef={parentRef}
+              contextMenu={contextMenu}
+              setRenameFile={setRenameFile}
               activeElement={activeElement}
               setActiveElement={setActiveElement}
               setPath={setPath}
               key={index}
               file={file}
               setFiles={setFiles}
+              rename={rename}
               setContextMenu={setContextMenu}
-              contextMenu={contextMenu}
               onContextMenu={(e) => {
                 e.preventDefault();
                 if (!contextMenu.visible || contextMenu.elementId !== index) {

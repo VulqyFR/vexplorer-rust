@@ -17,6 +17,12 @@ interface ContextMenuProps {
   selectedFile: FileMetadata | null;
   setPath: React.Dispatch<React.SetStateAction<string>>;
   setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
+  setRenameFile: React.Dispatch<
+    React.SetStateAction<{
+      inputValue: string;
+      renaming: boolean;
+    }>
+  > | null;
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -25,6 +31,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   selectedFile,
   setPath,
   setFiles,
+  setRenameFile,
 }) => {
   /*
    * Event handlers for context menu options
@@ -80,24 +87,16 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   };
 
   const handleRename = () => {
-    if (selectedFile) {
-      invoke("rename_file", {
-        path: selectedFile.file_path,
+    if (selectedFile && setRenameFile) {
+      setRenameFile({
+        inputValue: selectedFile.file_name,
+        renaming: true,
       });
     }
   };
 
   const handleDelete = () => {
     if (selectedFile) {
-      if (selectedFile.file_type === "Directory") {
-        invoke("delete_dir", {
-          path: selectedFile.file_path,
-        });
-        setFiles((prev) =>
-          prev.filter((file) => file.file_path !== selectedFile.file_path)
-        );
-        return;
-      }
       invoke("delete_file", {
         path: selectedFile.file_path,
       });

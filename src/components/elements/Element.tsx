@@ -9,12 +9,24 @@ const Element = ({
   setPath,
   activeElement,
   setActiveElement,
+  rename,
+  contextMenu,
   setContextMenu,
+  setRenameFile,
+  path,
   parentRef,
 }: {
   index: number;
+  path: string;
   file: FileMetadata;
+  setRenameFile: React.Dispatch<
+    React.SetStateAction<{ inputValue: string; renaming: boolean }>
+  >;
   setFiles: React.Dispatch<React.SetStateAction<FileMetadata[]>>;
+  rename: {
+    inputValue: string;
+    renaming: boolean;
+  };
   setPath: React.Dispatch<React.SetStateAction<string>>;
   activeElement: number | null;
   setActiveElement: React.Dispatch<React.SetStateAction<number | null>>;
@@ -43,6 +55,13 @@ const Element = ({
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (e.button === 0) {
+        if (!contextMenu.visible && rename.renaming) {
+          const target = e.target as Node;
+          const inputElement = document.querySelector("input");
+          if (inputElement && !inputElement.contains(target)) {
+            setRenameFile({ inputValue: "", renaming: false });
+          }
+        }
         setContextMenu((prevState) => ({ ...prevState, visible: false }));
       }
     };
@@ -51,7 +70,7 @@ const Element = ({
     return () => {
       window.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [contextMenu.visible, rename.renaming]);
 
   /*
    * Format file size
@@ -118,6 +137,26 @@ const Element = ({
     }
   };
 
+  const handleRenaming = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      invoke("rename_file", {
+        oldName: file.file_name,
+        newName: rename.inputValue,
+        path: path,
+      }).then(() => {
+        invoke("open_directory", { path: path }).then((result) => {
+          if (
+            Array.isArray(result) &&
+            result.every((item) => typeof item === "object" && item !== null)
+          ) {
+            setFiles(result);
+          }
+        });
+      });
+      setRenameFile({ inputValue: "", renaming: false });
+    }
+  };
+
   return (
     <>
       <tr
@@ -136,6 +175,9 @@ const Element = ({
               elementId: index,
               selectedFile: file,
             });
+            if (contextMenu.elementId !== index) {
+              setRenameFile({ inputValue: "", renaming: false });
+            }
           }
         }}
         className={`cursor-pointer ${
@@ -154,11 +196,25 @@ const Element = ({
               }}
             />
           ) : (
-            <span>.</span>
+            <span></span>
           )}
         </td>
         <td className="text-ellipsis overflow-hidden text-sm">
-          {file.file_name}
+          {rename.renaming && contextMenu.elementId === index ? (
+            <input
+              value={rename.inputValue}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) =>
+                setRenameFile({
+                  inputValue: (e.target as HTMLInputElement).value,
+                  renaming: true,
+                })
+              }
+              onKeyDown={(e) => handleRenaming(e as unknown as KeyboardEvent)}
+            />
+          ) : (
+            file.file_name
+          )}
         </td>
         <td className="text-ellipsis overflow-hidden text-sm">
           {file.file_modified}

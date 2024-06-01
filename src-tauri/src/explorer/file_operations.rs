@@ -3,15 +3,19 @@ use std::path::Path;
 use std::process::Command;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
+use std::os::windows::process::CommandExt;
+
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[tauri::command]
-pub fn rename_file(path: String, new_name: String) -> Result<(), String> {
-    let path = Path::new(&path);
-    let new_name = Path::new(&new_name);
-    match fs::rename(path, new_name) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e.to_string()),
-    }
+pub fn rename_file(old_name: String, new_name: String, path: String) -> Result<u64, String> {
+    let output = Command::new("cmd")
+    .args(&["/C", "ren", &old_name, &new_name])
+    .current_dir(&path)
+    .output()
+    .expect("Failed to execute command");
+    println!("Output: {:?}", output);
+    Ok(output.stdout.len() as u64)
 }
 
 #[tauri::command]
@@ -28,26 +32,16 @@ pub fn paste_file(destination_path: String) -> Result<u64, String> {
     let destination_path = Path::new(&destination_path);
     let output = Command::new("cmd")
         .args(&["/C", "copy", &source_path, destination_path.to_str().unwrap()])
+        .creation_flags(CREATE_NO_WINDOW)
         .output()
         .expect("Failed to execute command");
     Ok(output.stdout.len() as u64)
 }
-
 #[tauri::command]
-pub fn delete_file(path: String) -> Result<(), String> {
-    print!("Deleting file: {}", path);
+pub async fn delete_file(path: String) -> Result<(), String> {
     let path = Path::new(&path);
-    match fs::remove_file(path) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-#[tauri::command]
-pub fn delete_dir(path: String) -> Result<(), String> {
-    print!("Deleting directory: {}", path);
-    let path = Path::new(&path);
-    match fs::remove_dir_all(path) {
+    println!("Deleting directory: {}", path.display());
+    match trash::delete(path) {
         Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }
