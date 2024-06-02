@@ -1,4 +1,13 @@
 import { Volume } from "../../types";
+import Computer from "../icons/Computer";
+import Desktop from "../icons/Desktop";
+import Disk from "../icons/Disk";
+import Documents from "../icons/Documents";
+import Download from "../icons/Download";
+import Home from "../icons/Home";
+import Music from "../icons/Music";
+import Pictures from "../icons/Pictures";
+import Videos from "../icons/Videos";
 import Link from "./Link";
 
 const Sidebar = ({
@@ -18,8 +27,9 @@ const Sidebar = ({
   return (
     <div className="flex gap-2 py-2 ml-1 my-[-1rem] h-full">
       <div className="flex flex-col gap-2">
-        <div className="pt-2">
+        <div className="pt-2 flex gap-2 justify-center items-center">
           <Link
+            icon={Home()}
             onClick={() => {
               setPath("");
               setActiveElement(null);
@@ -30,6 +40,7 @@ const Sidebar = ({
         </div>
         <div className="py-2 border-y-[1px] border-[#4D4D4D] flex flex-col">
           <Link
+            icon={Desktop()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Desktop`);
               setActiveElement(null);
@@ -38,6 +49,7 @@ const Sidebar = ({
             Desktop
           </Link>
           <Link
+            icon={Download()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Downloads`);
               setActiveElement(null);
@@ -46,6 +58,7 @@ const Sidebar = ({
             Downloads
           </Link>
           <Link
+            icon={Documents()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Documents`);
               setActiveElement(null);
@@ -54,6 +67,7 @@ const Sidebar = ({
             Documents
           </Link>
           <Link
+            icon={Music()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Music`);
               setActiveElement(null);
@@ -62,6 +76,7 @@ const Sidebar = ({
             Music
           </Link>
           <Link
+            icon={Pictures()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Pictures`);
               setActiveElement(null);
@@ -70,6 +85,7 @@ const Sidebar = ({
             Pictures
           </Link>
           <Link
+            icon={Videos()}
             onClick={() => {
               setPath(`C:\\Users\\${user}\\Videos`);
               setActiveElement(null);
@@ -80,13 +96,18 @@ const Sidebar = ({
         </div>
         <div>
           <ul>
-            <li className="text-xs px-6 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]">
-              This PC
+            <li className="gap-2 flex items-center text-xs px-6 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]">
+              <Computer />
+              <p>This PC</p>
             </li>
             {volumes.map((volume, index) => (
-              <li key={index}>
+              <li
+                key={index}
+                className="flex gap-2 items-center pl-8 pr-4 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]"
+              >
+                <Disk />
                 <p
-                  className="text-xs pl-8 pr-4 py-[6px] hover:cursor-pointer hover:bg-[#4D4D4D] rounded-[5px]"
+                  className="text-xs "
                   onClick={() => {
                     setPath(volume.mount_point);
                     setActiveElement(null);
