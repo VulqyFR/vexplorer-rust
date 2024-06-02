@@ -64,7 +64,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const handleCopy = () => {
     if (selectedFile) {
-      invoke("copy_file", {
+      invoke("file_operation", {
+        operation: "Copy",
         path: selectedFile.file_path,
       });
     }
@@ -72,7 +73,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const handleCut = () => {
     if (selectedFile) {
-      invoke("cut_file", {
+      invoke("file_operation", {
+        operation: "Cut",
         path: selectedFile.file_path,
       });
     }
@@ -80,7 +82,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const handleCreateShortcut = () => {
     if (selectedFile) {
-      invoke("create_shortcut", {
+      invoke("file_operation", {
+        operation: "Shortcut",
         path: selectedFile.file_path,
       });
     }
@@ -97,7 +100,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const handleDelete = () => {
     if (selectedFile) {
-      invoke("delete_file", {
+      invoke("file_operation", {
+        operation: "Delete",
         path: selectedFile.file_path,
       });
       setFiles((prev) =>

@@ -40,14 +40,18 @@ const ElementList = ({
           if (activeElement !== null) {
             let c_path = files[activeElement].file_path;
             if (e.ctrlKey) {
-              invoke("copy_file", { path: c_path });
+              invoke("file_operation", { path: c_path, operation: "Copy" });
             }
           }
           break;
         case "v":
           if (e.ctrlKey) {
+            console.log("Paste");
             try {
-              invoke("paste_file", { destinationPath: path }).then(() => {
+              invoke("file_operation", {
+                operation: "Paste",
+                path: path,
+              }).then(() => {
                 invoke("open_directory", { path: path }).then((result) => {
                   if (
                     Array.isArray(result) &&

@@ -139,7 +139,8 @@ const Element = ({
 
   const handleRenaming = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      invoke("rename_file", {
+      invoke("file_operation", {
+        operation: "Rename",
         oldName: file.file_name,
         newName: rename.inputValue,
         path: path,
