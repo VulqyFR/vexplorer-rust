@@ -21,6 +21,14 @@ pub struct FileMetadata {
     pub file_icon: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FolderMetadata {
+    pub folder_name: String,
+    pub folder_path: String,
+    pub folder_modified: String,
+    pub folder_size: String,
+    pub folder_icon: Option<String>,
+}
 
 /*
  * This function gets the file type of the given metadata.
