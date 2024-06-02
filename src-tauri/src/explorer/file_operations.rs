@@ -5,6 +5,11 @@ use std::process::Command;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
 use std::os::windows::process::CommandExt;
+use std::ffi::OsStr;
+use std::ptr::null_mut;
+use std::os::windows::ffi::OsStrExt;
+use winapi::um::shellapi::ShellExecuteW;
+use winapi::um::winuser::SW_SHOWNORMAL;
 
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
@@ -15,6 +20,7 @@ pub enum FileOperation {
     Paste,
     Delete,
     Rename,
+    Properties,
     CreateFile,
     CreateDir,
 }
@@ -41,7 +47,6 @@ pub fn file_operation(operation: FileOperation, path: String, old_name: Option<S
             })
         },
         FileOperation::Copy => {
-            println!("Copying file: {:?}", path);
             let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
             ctx.set_contents(path.to_string()).unwrap();
             Ok(OperationResult {
@@ -50,7 +55,6 @@ pub fn file_operation(operation: FileOperation, path: String, old_name: Option<S
             })
         },
         FileOperation::Paste => {
-            println!("Pasting file: {:?}", path);
             let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
             let source_path = ctx.get_contents().unwrap();
             let destination_path = Path::new(&path);
@@ -84,6 +88,12 @@ pub fn file_operation(operation: FileOperation, path: String, old_name: Option<S
                 Err(e) => Err(e.to_string()),
             }
         },
+        FileOperation::Properties => {  
+            Ok(OperationResult {
+                result: 0,
+                error: None,
+            })
+        }
         FileOperation::CreateDir => {
             let path = Path::new(&path);
             match fs::create_dir(path) {

@@ -58,10 +58,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     }
   };
 
-  const handleOpenInNewTab = () => {
-    //TODO: implement open in new tab
-  };
-
   const handleCopy = () => {
     if (selectedFile) {
       invoke("file_operation", {
@@ -116,29 +112,58 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         top: y,
         left: x,
       }}
-      className="bg-[#1A1A1A] opacity-90 p-2 rounded-md shadow-md z-10 border border-[#4D4D4D]"
+      className="bg-[#1A1A1A] opacity-90 p-2 rounded-md shadow-md z-10 border border-[#4D4D4D] min-w-48"
     >
       <ul className="list-none">
-        <li onClick={handleOpen} className="text-white">
+        <li
+          onClick={handleOpen}
+          className="text-white flex justify-between items-center px-4 pt-1"
+        >
           <a className="cursor-pointer">Open</a>
+          <p className="text-xs text-[#A1A1A1]">Enter</p>
         </li>
-        <li onClick={handleOpenInNewTab} className="text-white">
-          <a>Open in new tab</a>
+        <li
+          onClick={handleOpen}
+          className="text-white flex justify-between items-center px-4 pb-1"
+        >
+          <a className="cursor-pointer">Open with</a>
         </li>
-        <li onClick={handleCopy} className="text-white">
-          Copy
+        <li
+          onClick={handleCopy}
+          className="text-white flex justify-between items-center border-t-[0.5px] border-[#4D4D4D] px-4 pt-1"
+        >
+          <a className="cursor-pointer">Copy</a>
+          <p className="text-xs text-[#A1A1A1]">Ctrl + C</p>
         </li>
-        <li onClick={handleCut} className="text-white">
-          Cut
+        <li
+          onClick={handleCut}
+          className="text-white flex justify-between items-center px-4 pb-2"
+        >
+          <a className="cursor-pointer">Cut</a>
+          <p className="text-xs text-[#A1A1A1]">Ctrl + X</p>
         </li>
-        <li onClick={handleCreateShortcut} className="text-white">
-          Create shortcut
+        <li
+          onClick={handleCreateShortcut}
+          className="text-white border-t-[0.5px] border-[#4D4D4D] px-4 pt-1"
+        >
+          <a className="cursor-pointer">Create shortcut</a>
         </li>
-        <li onClick={handleRename} className="text-white">
-          Rename
+        <li
+          onClick={handleRename}
+          className="text-white flex justify-between items-center px-4"
+        >
+          <a className="cursor-pointer">Rename</a>
+          <p className="text-xs text-[#A1A1A1]">F2</p>
         </li>
-        <li onClick={handleDelete} className="text-white">
-          Delete
+        <li
+          onClick={handleDelete}
+          className="text-white flex justify-between items-center px-4 pb-1"
+        >
+          <a className="cursor-pointer">Delete</a>
+          <p className="text-xs text-[#A1A1A1]">Ctrl + D</p>
+        </li>
+        <li className="text-white flex justify-between items-center px-4 pb-2 border-t-[0.5px] border-[#4D4D4D] pt-1">
+          <a>Properties</a>
         </li>
       </ul>
     </div>
