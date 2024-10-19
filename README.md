@@ -1,30 +1,45 @@
-# React + TypeScript + Vite
+# VExplorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+VExplorer is a cross-platform desktop application built using Tauri, Rust, and React. It leverages modern web technologies to provide a seamless user experience for file exploration and management.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Installation](#installation)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+### Prerequisites
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- [Node.js](https://nodejs.org/) (version 14 or higher)
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Tauri CLI](https://tauri.studio/docs/getting-started/intro#setting-up-your-environment)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Steps
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/vexplorer.git
+    cd vexplorer
+    ```
+
+2. Install dependencies:
+    ```sh
+    npm install
+    ```
+
+3. Build the Tauri application:
+    ```sh
+    npm run tauri build
+    ```
+
+## Usage
+
+To start the application in development mode, run:
+```sh
+npm run tauri dev
